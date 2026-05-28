@@ -1,5 +1,6 @@
 import Foundation
 import FirebaseFirestore
+import FirebaseAuth
 
 // MARK: - FirestoreService
 // ─────────────────────────────────────────────────────────
@@ -16,9 +17,12 @@ final class FirestoreService {
 
     private let db = Firestore.firestore()
 
-    // MARK: - Device-level user identity (no auth required)
+    // MARK: - User identity (Firebase Auth UID — anonymous or full account)
 
     var userID: String {
+        // Prefer Firebase Auth UID (works for anon, email, google — preserved on linking)
+        if let uid = Auth.auth().currentUser?.uid { return uid }
+        // Fallback: local UUID for offline/pre-auth state
         let key = "fitcoach.userID"
         if let id = UserDefaults.standard.string(forKey: key) { return id }
         let id = UUID().uuidString

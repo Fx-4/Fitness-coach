@@ -2,8 +2,11 @@ import SwiftUI
 
 struct ProfileView: View {
     @EnvironmentObject private var store: AppDataStore
+    @EnvironmentObject private var authVM: AuthViewModel
     @StateObject private var viewModel = ProfileViewModel()
     @State private var isEditing = false
+    @State private var showUpgradeSheet = false
+    @State private var showSignOutConfirm = false
 
     var body: some View {
         NavigationStack {
@@ -11,6 +14,7 @@ struct ProfileView: View {
                 statsSection
                 goalsSection
                 fitnessSection
+                accountSection
                 appSection
             }
             .navigationTitle("Profile")
@@ -108,6 +112,79 @@ struct ProfileView: View {
             }
             LabeledContent("Est. BMI", value: viewModel.bmiFormatted)
             LabeledContent("Est. TDEE", value: viewModel.tdeeFormatted + " kcal/day")
+        }
+    }
+
+    // MARK: - Account section
+
+    private var accountSection: some View {
+        Section("Account") {
+            // Identity row
+            if authVM.isGuest {
+                HStack {
+                    Image(systemName: "person.crop.circle.badge.questionmark")
+                        .foregroundStyle(.orange)
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("Guest Account")
+                            .font(.subheadline.bold())
+                        Text("Data saved locally & synced. Upgrade to keep it forever.")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                }
+                .padding(.vertical, 4)
+
+                // Upgrade to Email
+                Button {
+                    showUpgradeSheet = true
+                } label: {
+                    Label("Link Email & Password", systemImage: "envelope.badge.shield.half.filled.fill")
+                        .foregroundStyle(.orange)
+                }
+
+                // Upgrade to Google
+                Button {
+                    Task { await authVM.linkWithGoogle() }
+                } label: {
+                    Label("Link Google Account", systemImage: "globe.badge.chevron.backward")
+                        .foregroundStyle(.blue)
+                }
+
+                if let err = authVM.error {
+                    Text(err).font(.caption).foregroundStyle(.red)
+                }
+
+            } else {
+                // Signed-in user
+                HStack {
+                    Image(systemName: "person.crop.circle.fill.badge.checkmark")
+                        .foregroundStyle(.green)
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(authVM.displayName ?? authVM.userEmail ?? "Signed in")
+                            .font(.subheadline.bold())
+                        if let email = authVM.userEmail {
+                            Text(email).font(.caption).foregroundStyle(.secondary)
+                        }
+                    }
+                }
+                .padding(.vertical, 4)
+            }
+
+            // Sign out (always shown)
+            Button(role: .destructive) {
+                showSignOutConfirm = true
+            } label: {
+                Label("Sign Out", systemImage: "rectangle.portrait.and.arrow.right")
+            }
+        }
+        .sheet(isPresented: $showUpgradeSheet) {
+            EmailAuthView(isLinking: true)
+                .environmentObject(authVM)
+        }
+        .confirmationDialog("Sign out of FitCoach?", isPresented: $showSignOutConfirm,
+                            titleVisibility: .visible) {
+            Button("Sign Out", role: .destructive) { authVM.signOut() }
+            Button("Cancel", role: .cancel) {}
         }
     }
 

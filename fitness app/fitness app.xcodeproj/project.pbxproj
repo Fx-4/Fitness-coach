@@ -41,8 +41,12 @@
 		BC01CD072FBD0001000D1001 /* WorkoutRecommendationEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC01CD082FBD0001000D1001 /* WorkoutRecommendationEngine.swift */; };
 		BC01CD092FBD0001000D1001 /* WorkoutPlanDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC01CD0A2FBD0001000D1001 /* WorkoutPlanDetailView.swift */; };
 		BC02CD012FBD0002000D1001 /* AIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC02CD022FBD0002000D1001 /* AIService.swift */; };
+		BC03CD012FBD0003000D1001 /* FirestoreService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC03CD022FBD0003000D1001 /* FirestoreService.swift */; };
 		BC02CD032FBD0002000D1001 /* AIChatViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC02CD042FBD0002000D1001 /* AIChatViewModel.swift */; };
 		BC02CD052FBD0002000D1001 /* AIChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC02CD062FBD0002000D1001 /* AIChatView.swift */; };
+		BC04CD012FBD0004000D1001 /* AuthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC04CD022FBD0004000D1001 /* AuthViewModel.swift */; };
+		BC04CD032FBD0004000D1001 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC04CD042FBD0004000D1001 /* LoginView.swift */; };
+		BC04CD052FBD0004000D1001 /* EmailAuthView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC04CD062FBD0004000D1001 /* EmailAuthView.swift */; };
 		EFEBDDFF2FAD8D9C000D139D /* fitness_appApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFEBDDFE2FAD8D9C000D139D /* fitness_appApp.swift */; };
 		EFEBDE012FAD8D9C000D139D /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFEBDE002FAD8D9C000D139D /* ContentView.swift */; };
 		EFEBDE032FAD8D9E000D139D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EFEBDE022FAD8D9E000D139D /* Assets.xcassets */; };
@@ -104,8 +108,12 @@
 		BC01CD082FBD0001000D1001 /* WorkoutRecommendationEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutRecommendationEngine.swift; sourceTree = "<group>"; };
 		BC01CD0A2FBD0001000D1001 /* WorkoutPlanDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutPlanDetailView.swift; sourceTree = "<group>"; };
 		BC02CD022FBD0002000D1001 /* AIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AIService.swift; sourceTree = "<group>"; };
+		BC03CD022FBD0003000D1001 /* FirestoreService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreService.swift; sourceTree = "<group>"; };
 		BC02CD042FBD0002000D1001 /* AIChatViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AIChatViewModel.swift; sourceTree = "<group>"; };
 		BC02CD062FBD0002000D1001 /* AIChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AIChatView.swift; sourceTree = "<group>"; };
+		BC04CD022FBD0004000D1001 /* AuthViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewModel.swift; sourceTree = "<group>"; };
+		BC04CD042FBD0004000D1001 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
+		BC04CD062FBD0004000D1001 /* EmailAuthView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailAuthView.swift; sourceTree = "<group>"; };
 		EFEBDDFB2FAD8D9C000D139D /* fitness app.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "fitness app.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		EFEBDDFE2FAD8D9C000D139D /* fitness_appApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = fitness_appApp.swift; sourceTree = "<group>"; };
 		EFEBDE002FAD8D9C000D139D /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -168,6 +176,7 @@
 				BC01CD062FBD0001000D1001 /* WorkoutSafetyPolicy.swift */,
 				BC01CD082FBD0001000D1001 /* WorkoutRecommendationEngine.swift */,
 				BC02CD022FBD0002000D1001 /* AIService.swift */,
+				BC03CD022FBD0003000D1001 /* FirestoreService.swift */,
 				AB01CD452FAD8D9C000D1025 /* Protocols */,
 			);
 			path = Services;
@@ -181,6 +190,7 @@
 				AB01CD192FAD8D9C000D100D /* CameraViewModel.swift */,
 				AB01CD1B2FAD8D9C000D100E /* ProfileViewModel.swift */,
 				BC02CD042FBD0002000D1001 /* AIChatViewModel.swift */,
+				BC04CD022FBD0004000D1001 /* AuthViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -200,6 +210,7 @@
 				AB01CD472FAD8D9C000D1027 /* Workouts */,
 				AB01CD482FAD8D9C000D1028 /* Camera */,
 				AB01CD492FAD8D9C000D1029 /* Profile */,
+				BC04CD072FBD0004000D1001 /* Auth */,
 				BC02CD072FBD0002000D1001 /* Coach */,
 			);
 			path = Views;
@@ -251,6 +262,15 @@
 				AB01CD312FAD8D9C000D1019 /* ProfileView.swift */,
 			);
 			path = Profile;
+			sourceTree = "<group>";
+		};
+		BC04CD072FBD0004000D1001 /* Auth */ = {
+			isa = PBXGroup;
+			children = (
+				BC04CD042FBD0004000D1001 /* LoginView.swift */,
+				BC04CD062FBD0004000D1001 /* EmailAuthView.swift */,
+			);
+			path = Auth;
 			sourceTree = "<group>";
 		};
 		BC02CD072FBD0002000D1001 /* Coach */ = {
@@ -341,6 +361,10 @@
 			dependencies = (
 			);
 			name = "fitness app";
+			packageProductDependencies = (
+				FBC000000000000000000003 /* FirebaseFirestore */,
+				FBC000000000000000000004 /* FirebaseAuth */,
+			);
 			productName = "fitness app";
 			productReference = EFEBDDFB2FAD8D9C000D139D /* fitness app.app */;
 			productType = "com.apple.product-type.application";
@@ -416,6 +440,9 @@
 			productRefGroup = EFEBDDFC2FAD8D9C000D139D /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
+			packageReferences = (
+				FBC000000000000000000001 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+			);
 			targets = (
 				EFEBDDFA2FAD8D9C000D139D /* fitness app */,
 				EFEBDE0B2FAD8D9E000D139D /* fitness appTests */,
@@ -491,8 +518,12 @@
 				BC01CD072FBD0001000D1001 /* WorkoutRecommendationEngine.swift in Sources */,
 				BC01CD092FBD0001000D1001 /* WorkoutPlanDetailView.swift in Sources */,
 				BC02CD012FBD0002000D1001 /* AIService.swift in Sources */,
+				BC03CD012FBD0003000D1001 /* FirestoreService.swift in Sources */,
 				BC02CD032FBD0002000D1001 /* AIChatViewModel.swift in Sources */,
 				BC02CD052FBD0002000D1001 /* AIChatView.swift in Sources */,
+				BC04CD012FBD0004000D1001 /* AuthViewModel.swift in Sources */,
+				BC04CD032FBD0004000D1001 /* LoginView.swift in Sources */,
+				BC04CD052FBD0004000D1001 /* EmailAuthView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -834,6 +865,30 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		FBC000000000000000000001 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 10.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		FBC000000000000000000003 /* FirebaseFirestore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FBC000000000000000000001 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestore;
+		};
+		FBC000000000000000000004 /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FBC000000000000000000001 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = EFEBDDF32FAD8D9C000D139D /* Project object */;
 }
