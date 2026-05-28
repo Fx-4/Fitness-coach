@@ -23,7 +23,7 @@ struct ChatMessage: Identifiable, Codable {
 final class AIService {
     static let shared = AIService()
 
-    private let apiKey = "YOUR_GROQ_API_KEY_HERE"   // ← paste key Groq kamu di sini
+    private let apiKey = "YOUR_GROQ_API_KEY_HERE"   // ← paste key Groq kamu di sini (dari https://console.groq.com/keys)
     private let endpoint = URL(string: "https://api.groq.com/openai/v1/chat/completions")!
     private let model = "llama-3.1-8b-instant"   // model Groq tercepat & gratis
 
