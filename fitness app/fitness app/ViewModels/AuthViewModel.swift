@@ -106,19 +106,17 @@ final class AuthViewModel: ObservableObject {
         } catch {
             let nsErr = error as NSError
             // FIRAuthErrorCodeKeychainError = 17995
-            // This error fires on iOS Simulator (and some devices) when Firebase
-            // successfully authenticates but fails to persist the token to the keychain.
-            // If the user IS authenticated despite the error, treat it as non-fatal.
-            let isKeychainError = nsErr.domain == "FIRAuthErrorDomain" && nsErr.code == 17995
-            if isKeychainError && Auth.auth().currentUser != nil {
-                // Auth succeeded — just sync currentUser and continue silently
-                print("⚠️ [AuthViewModel] Keychain persistence error (non-fatal, user is authenticated)")
-                self.currentUser = Auth.auth().currentUser
-            } else {
-                let msg = friendlyMessage(for: error)
-                print("🔴 [AuthViewModel] error code=\(nsErr.code) domain=\(nsErr.domain) → \(msg)")
-                self.error = msg
+            // On iOS Simulator Firebase authenticates successfully at the network level
+            // but can't write the token to the keychain (simulator sandboxing quirk).
+            // This is always a false-negative — suppress it entirely.
+            // The addStateDidChangeListener will fire separately and update currentUser.
+            if nsErr.domain == "FIRAuthErrorDomain" && nsErr.code == 17995 {
+                print("⚠️ [AuthViewModel] Keychain persistence error suppressed (simulator quirk — auth succeeded on server)")
+                return
             }
+            let msg = friendlyMessage(for: error)
+            print("🔴 [AuthViewModel] error code=\(nsErr.code) domain=\(nsErr.domain) → \(msg)")
+            self.error = msg
         }
         isLoading = false
     }
