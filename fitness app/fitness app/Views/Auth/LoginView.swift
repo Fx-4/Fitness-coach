@@ -3,7 +3,6 @@ import SwiftUI
 struct LoginView: View {
     @EnvironmentObject private var authVM: AuthViewModel
     @State private var showEmailSheet = false
-    @State private var showErrorAlert = false
 
     var body: some View {
         ZStack {
@@ -108,11 +107,11 @@ struct LoginView: View {
             EmailAuthView()
                 .environmentObject(authVM)
         }
-        .onChange(of: authVM.error) { newErr in
-            if newErr != nil { showErrorAlert = true }
-        }
-        .alert("Sign-In Error", isPresented: $showErrorAlert) {
-            Button("OK") { authVM.error = nil }
+        .alert("Sign-In Error", isPresented: Binding(
+            get: { authVM.error != nil },
+            set: { if !$0 { authVM.error = nil } }
+        )) {
+            Button("OK") {}
         } message: {
             Text(authVM.error ?? "")
         }

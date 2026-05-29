@@ -101,24 +101,23 @@ final class AuthViewModel: ObservableObject {
     private func run(_ block: @escaping () async throws -> Void) async {
         isLoading = true
         error = nil
+        defer { isLoading = false }   // always reset even on early return
         do {
             try await block()
         } catch {
             let nsErr = error as NSError
-            // FIRAuthErrorCodeKeychainError = 17995
-            // On iOS Simulator Firebase authenticates successfully at the network level
-            // but can't write the token to the keychain (simulator sandboxing quirk).
-            // This is always a false-negative — suppress it entirely.
-            // The addStateDidChangeListener will fire separately and update currentUser.
+            // FIRAuthErrorCodeKeychainError (17995) — Firebase authenticated successfully
+            // at the network level but failed to persist the token to the iOS keychain.
+            // Caused by NOT_CODESIGNED / SecTaskLoadEntitlements failing on the simulator.
+            // Suppress silently — the auth state listener fires separately and sets currentUser.
             if nsErr.domain == "FIRAuthErrorDomain" && nsErr.code == 17995 {
-                print("⚠️ [AuthViewModel] Keychain persistence error suppressed (simulator quirk — auth succeeded on server)")
+                print("⚠️ [AuthViewModel] Keychain error suppressed (17995, simulator quirk)")
                 return
             }
             let msg = friendlyMessage(for: error)
             print("🔴 [AuthViewModel] error code=\(nsErr.code) domain=\(nsErr.domain) → \(msg)")
             self.error = msg
         }
-        isLoading = false
     }
 
     private func friendlyMessage(for error: Error) -> String {
