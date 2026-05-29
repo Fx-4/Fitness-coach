@@ -108,8 +108,8 @@ struct LoginView: View {
             EmailAuthView()
                 .environmentObject(authVM)
         }
-        .onReceive(authVM.$error) { err in
-            if err != nil { showErrorAlert = true }
+        .onChange(of: authVM.error) { newValue in
+            if newValue != nil { showErrorAlert = true }
         }
         .alert("Sign-In Error", isPresented: $showErrorAlert) {
             Button("OK") { authVM.error = nil }
