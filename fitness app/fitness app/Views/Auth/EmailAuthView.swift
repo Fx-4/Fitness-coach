@@ -11,6 +11,7 @@ struct EmailAuthView: View {
     @State private var showReset = false
     @State private var resetEmail = ""
     @State private var resetSent  = false
+    @State private var showErrorAlert = false
     private enum Mode { case signIn, signUp }
 
     // When used for guest upgrade (linking), pass isLinking = true
@@ -92,11 +93,11 @@ struct EmailAuthView: View {
             }
         }
         .presentationDetents([.medium])
-        .alert("Sign-In Error", isPresented: Binding(
-            get: { authVM.error != nil },
-            set: { if !$0 { authVM.error = nil } }
-        )) {
-            Button("OK") {}
+        .onReceive(authVM.$error) { err in
+            if err != nil { showErrorAlert = true }
+        }
+        .alert("Sign-In Error", isPresented: $showErrorAlert) {
+            Button("OK") { authVM.error = nil }
         } message: {
             Text(authVM.error ?? "")
         }
