@@ -18,13 +18,33 @@ struct FormFeedbackView: View {
             ZStack(alignment: .bottom) {
                 cameraLayer
 
-                // Floating session HUD — top-left, always visible
+                // ── Session HUD (top-left) ────────────────────────────────
                 if viewModel.isSessionActive {
                     VStack {
                         sessionHUD
                             .padding(.top, 60)
                             .padding(.horizontal, DesignTokens.Spacing.md)
                         Spacer()
+                    }
+                }
+
+                // ── Squat classifier label (center, above bottom panel) ───
+                if viewModel.selectedExercise == "Squat",
+                   let label = viewModel.poseFeedback?.classifierLabel {
+                    VStack {
+                        Spacer()
+                        HStack(spacing: 6) {
+                            Image(systemName: label.systemImage).font(.subheadline.bold())
+                            Text(label.rawValue).font(.subheadline.bold())
+                        }
+                        .padding(.horizontal, 16)
+                        .padding(.vertical, 8)
+                        .background(classifierLabelColor(label).opacity(0.85))
+                        .foregroundStyle(.white)
+                        .clipShape(Capsule())
+                        .shadow(radius: 4)
+                        .padding(.bottom, isPanelExpanded ? 320 : 190)
+                        .animation(.easeInOut(duration: 0.2), value: label)
                     }
                 }
 
@@ -49,13 +69,18 @@ struct FormFeedbackView: View {
         }
     }
 
-    // MARK: - Camera background
+    // MARK: - Camera background + skeleton overlay
 
     private var cameraLayer: some View {
         Group {
             if viewModel.isCameraRunning {
-                CameraPreviewView(session: viewModel.session)
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                CameraPreviewView(
+                    session:      viewModel.session,
+                    joints:       viewModel.poseFeedback?.joints ?? [:],
+                    score:        viewModel.poseFeedback?.score ?? 0,
+                    showSkeleton: viewModel.showSkeleton
+                )
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
             } else {
                 Rectangle()
                     .fill(.black)
@@ -82,24 +107,16 @@ struct FormFeedbackView: View {
                     .font(.caption.bold().monospacedDigit())
                     .contentTransition(.numericText())
             }
-            .padding(.horizontal, DesignTokens.Spacing.sm)
-            .padding(.vertical, 6)
-            .background(.orange)
-            .foregroundStyle(.white)
-            .clipShape(Capsule())
+            .hudChip(bg: .orange)
 
             // Rep chip
             HStack(spacing: 4) {
                 Image(systemName: "arrow.trianglehead.counterclockwise").font(.caption.bold())
-                Text("\(viewModel.repCount) reps")
-                    .font(.caption.bold())
+                Text("\(viewModel.repCount) reps").font(.caption.bold())
                     .contentTransition(.numericText())
             }
-            .padding(.horizontal, DesignTokens.Spacing.sm)
-            .padding(.vertical, 6)
-            .background(.black.opacity(0.55))
+            .hudChip(bg: .black.opacity(0.55))
             .foregroundStyle(.white)
-            .clipShape(Capsule())
 
             // Form score chip
             if viewModel.avgFormScore > 0 {
@@ -108,11 +125,19 @@ struct FormFeedbackView: View {
                     Text("\((viewModel.avgFormScore * 100).formatted(.number.precision(.fractionLength(0))))%")
                         .font(.caption.bold())
                 }
-                .padding(.horizontal, DesignTokens.Spacing.sm)
-                .padding(.vertical, 6)
-                .background(.black.opacity(0.55))
+                .hudChip(bg: .black.opacity(0.55))
                 .foregroundStyle(hudScoreColor)
-                .clipShape(Capsule())
+            }
+
+            // ── FPS chip (Vision detection rate) ─────────────────────────
+            if viewModel.detectionFPS > 0 {
+                HStack(spacing: 3) {
+                    Image(systemName: "waveform").font(.caption2.bold())
+                    Text("\(viewModel.detectionFPS) FPS")
+                        .font(.caption2.bold().monospacedDigit())
+                }
+                .hudChip(bg: .black.opacity(0.55))
+                .foregroundStyle(.cyan)
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -416,6 +441,16 @@ struct FormFeedbackView: View {
 
     @ToolbarContentBuilder
     private var cameraToolbar: some ToolbarContent {
+        // Skeleton toggle
+        ToolbarItem(placement: .navigationBarLeading) {
+            Button {
+                viewModel.showSkeleton.toggle()
+            } label: {
+                Image(systemName: viewModel.showSkeleton ? "person.fill.viewfinder" : "person.slash")
+                    .foregroundStyle(viewModel.showSkeleton ? .orange : .secondary)
+            }
+        }
+        // Camera status indicator
         ToolbarItem(placement: .navigationBarTrailing) {
             Label("Camera", systemImage: "circle.fill")
                 .foregroundStyle(viewModel.isCameraRunning ? .green : .red)
@@ -463,5 +498,26 @@ struct FormFeedbackView: View {
         case "yellow": return .yellow
         default: return .red
         }
+    }
+
+    private func classifierLabelColor(_ label: SquatFormClassifier.Label) -> Color {
+        switch label.color {
+        case "green":  return .green
+        case "yellow": return .orange
+        default:       return .red
+        }
+    }
+}
+
+// MARK: - HUD chip style helper
+
+private extension View {
+    func hudChip(bg: Color) -> some View {
+        self
+            .padding(.horizontal, 8)
+            .padding(.vertical, 6)
+            .background(bg)
+            .foregroundStyle(.white)
+            .clipShape(Capsule())
     }
 }
